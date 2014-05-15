@@ -14,7 +14,7 @@ Installation instructions
 =========================
 
 <ol>
-<li>Copy the <code>lock_entry</code> folder into your <code>/system/expressionengine/third_party/</code> folder.</li>
+<li>Clone this repo into your <code>/system/expressionengine/third_party/</code> folder.</li>
 <li>Install the Lock Entry extension in ExpressionEngine via <em>Add-Ons</em> -> <em>Extensions</em>. Click <strong>Enable?</strong>, Select <strong>Install</strong> and click <strong>Submit</strong>.</li>
 <li>From now on, all entries will be locked automagically every time an Entry submission form (see picture) is loaded.</li>
 </ol>
