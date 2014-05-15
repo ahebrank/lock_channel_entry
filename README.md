@@ -1,7 +1,7 @@
 Lock-Entry
 ==========
 
-Locks an ExpressionEngine entry or template when an editor starts editing.
+Locks an ExpressionEngine entry when an editor starts editing.
 
 
 Screenshot
@@ -24,5 +24,3 @@ Other info
 ==========
 
 <p>All entries are locked as long as the editor stays at the Entry submission form (see picture) is loaded. After the page is unloaded, either after submission or leaving the page, the lock will remain alive for 5 minutes. After 5 minutes the entry will be unlocked automatigally.</p>
-
-<p><strong>Have fun!</strong></p>
