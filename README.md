@@ -1,4 +1,4 @@
-Lock-Entry
+lock-channel-entry
 ==========
 
 Locks an ExpressionEngine entry when an editor starts editing.
@@ -24,3 +24,5 @@ Other info
 ==========
 
 <p>All entries are locked as long as the editor stays at the Entry submission form (see picture) is loaded. After the page is unloaded, either after submission or leaving the page, the lock will remain alive for 5 minutes. After 5 minutes the entry will be unlocked automatigally.</p>
+
+<p>Relatively untested updates for EE 2.6+. Renamed for clarification, but see forking trail.</p>
