@@ -16,27 +16,27 @@ class Lock_channel_entry
     /**
      * @var string
      */
-    public $name = LOCK_ENTRY_NAME;
+    public $name = LOCK_CHANNEL_ENTRY_NAME;
 
     /**
      * @var string
      */
-    public $version = LOCK_ENTRY_VERSION;
+    public $version = LOCK_CHANNEL_ENTRY_VERSION;
 
     /**
      * @var string
      */
-    public $description = LOCK_ENTRY_DESCRIPTION;
+    public $description = LOCK_CHANNEL_ENTRY_DESCRIPTION;
 
     /**
      * @var string
      */
-    public $settings_exist = LOCK_ENTRY_SETTINGS_EXIST;
+    public $settings_exist = LOCK_CHANNEL_ENTRY_SETTINGS_EXIST;
 
     /**
      * @var string
      */
-    public $docs_url = LOCK_ENTRY_DOCS_URL;
+    public $docs_url = LOCK_CHANNEL_ENTRY_DOCS_URL;
 
     /**
      * @var CI_Controller
@@ -94,7 +94,7 @@ class Lock_channel_entry
 
         $data = array('last_activity' => date("Y-m-d H:i:s"));
         $sql = $this->EE->db->update_string(
-            'lock_entry_entries',
+            'lock_channel_entry_entries',
             $data,
             sprintf(
                 "`%s` = %d AND `session_id` = %d",
@@ -109,4 +109,4 @@ class Lock_channel_entry
     }
 }
 
-/* End of file mod.lock_entry.php */
+/* End of file mod.lock_channel_entry.php */

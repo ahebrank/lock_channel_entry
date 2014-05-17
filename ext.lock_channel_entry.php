@@ -2,40 +2,42 @@
 require_once(dirname(__FILE__) . "/settings.php");
 
 /**
- * Extension File for Lock Entry
+ * Extension File for Lock Channel Entry
  *
- * This file must be in your /system/third_party/lock_entry directory of your ExpressionEngine installation
+ * This file must be in your /system/third_party/lock_channel_entry directory of your ExpressionEngine installation
  *
- * @package             Lock_entry
+ * @package             Lock_channel_entry
  * @author              Denver Sessink (dsessink@gmail.com)
  * @copyright           Cowpyright (c) 2012 Denver Sessink
+ *
+ * forked from Lock-Entry (https://github.com/denvers/Lock-Entry) by Andy Hebrank, May 2014
  */
 class Lock_channel_entry_ext
 {
     /**
      * @var string
      */
-    public $name = LOCK_ENTRY_NAME;
+    public $name = LOCK_CHANNEL_ENTRY_NAME;
 
     /**
      * @var string
      */
-    public $version = LOCK_ENTRY_VERSION;
+    public $version = LOCK_CHANNEL_ENTRY_VERSION;
 
     /**
      * @var string
      */
-    public $description = LOCK_ENTRY_DESCRIPTION;
+    public $description = LOCK_CHANNEL_ENTRY_DESCRIPTION;
 
     /**
      * @var string
      */
-    public $settings_exist = LOCK_ENTRY_SETTINGS_EXIST;
+    public $settings_exist = LOCK_CHANNEL_ENTRY_SETTINGS_EXIST;
 
     /**
      * @var string
      */
-    public $docs_url = LOCK_ENTRY_DOCS_URL;
+    public $docs_url = LOCK_CHANNEL_ENTRY_DOCS_URL;
 
     /**
      * @var CI_Controller
@@ -45,9 +47,9 @@ class Lock_channel_entry_ext
     /**
      * Constructor
      *
-     * @return Lock_entry_ext
+     * @return Lock_channel_entry_ext
      */
-    function Lock_entry_ext($settings = '')
+    function Lock_channel_entry_ext($settings = '')
     {
         $this->EE =& get_instance();
         $this->EE->lang->loadfile("lock_entry");
@@ -59,7 +61,7 @@ class Lock_channel_entry_ext
      */
     function activate_extension()
     {
-        // Register hook: cp_js_end
+        // Register hook: changed from cp_js_end (no session info available) to cp_menu_array
         $this->_register_hook('cp_menu_array', 'cp_menu_array_hook', 5);
 
         // Register hook: sessions_end (for every page load)
@@ -104,7 +106,7 @@ class Lock_channel_entry_ext
     private function _register_ping_action()
     {
         $data = array(
-            'class' => 'Lock_entry', // refers to mod.lock_entry.php
+            'class' => 'Lock_channel_entry', // refers to mod.lock_channel_entry.php
             'method' => 'ping'
         );
 
@@ -141,7 +143,7 @@ class Lock_channel_entry_ext
         $this->EE->dbforge->add_field($fields);
         $this->EE->dbforge->add_key('id', TRUE);
 
-        $this->EE->dbforge->create_table('lock_entry_entries');
+        $this->EE->dbforge->create_table('lock_channel_entry_entries');
     }
 
     /**
@@ -152,7 +154,7 @@ class Lock_channel_entry_ext
         $this->EE->db->where('class', __CLASS__);
         $this->EE->db->delete('extensions');
 
-        $this->EE->db->where('class', 'Lock_entry');
+        $this->EE->db->where('class', 'Lock_channel_entry');
         $this->EE->db->delete('actions');
 
         $this->_delete_database_tables();
@@ -177,7 +179,7 @@ class Lock_channel_entry_ext
         $this->EE->db->where('class', $this->name);
         $this->EE->db->delete('actions');
 
-        $this->EE->dbforge->drop_table('lock_entry_entries');
+        $this->EE->dbforge->drop_table('lock_channel_entry_entries');
     }
 
     /**
@@ -256,7 +258,7 @@ class Lock_channel_entry_ext
                 break;
         }
 
-        $this->EE->db->insert('lock_entry_entries', $data);
+        $this->EE->db->insert('lock_channel_entry_entries', $data);
     }
 
     /**
@@ -268,7 +270,7 @@ class Lock_channel_entry_ext
      */
     private function _get_object_lock($object_id, $type = 'entry')
     {
-        $this->EE->db->select('*')->from('exp_lock_entry_entries');
+        $this->EE->db->select('*')->from('exp_lock_channel_entry_entries');
 
         switch ($type) {
             case "entry":
@@ -366,10 +368,10 @@ class Lock_channel_entry_ext
             $js .= " \n ";
         } else {
             // Locked for me, so we need a pingback for keeping the activity of the lock alive
-            $action_id = $this->EE->cp->fetch_action_id('Lock_entry', 'ping');
+            $action_id = $this->EE->cp->fetch_action_id('Lock_channel_entry', 'ping');
             $session_id = $this->_get_session_id();
 
-            $url_ping_hash = lock_entry_settings::_generate_ping_hash($object_id, $session_id);
+            $url_ping_hash = lock_channel_entry_settings::_generate_ping_hash($object_id, $session_id);
 
             $js = "var hard_lock = true; \n";
             $js .= "var lock_entry_ping_url = '" . $this->EE->functions->fetch_site_index(0, 0) . QUERY_MARKER . 'ACT=' . $action_id . "&object_id=" . $object_id . "&session_id=" . $session_id . "&mode=" . $mode . "&hash=" . $url_ping_hash . "'; ";
@@ -398,7 +400,7 @@ class Lock_channel_entry_ext
     private function _delete_session_entry_locks($session_id)
     {
         // WARNING: removes all locks for current session, so Entry and Template locks!
-        $this->EE->db->delete('exp_lock_entry_entries', array('session_id' => $session_id));
+        $this->EE->db->delete('exp_lock_channel_entry_entries', array('session_id' => $session_id));
     }
 
     /**
@@ -478,7 +480,7 @@ class Lock_channel_entry_ext
     private function _remove_old_locks($object_id = null, $session_id = null, $mode = "entry")
     {
         // select all old locks
-        $this->EE->db->from('exp_lock_entry_entries')
+        $this->EE->db->from('exp_lock_channel_entry_entries')
             ->where('DATE_ADD(last_activity, INTERVAL 5 MINUTE) < NOW()');
 
         switch ($mode) {
@@ -502,25 +504,25 @@ class Lock_channel_entry_ext
                 if ($entry_id == $object_id && $entry['session_id'] == $session_id) {
                     // Right, this one should NOT be deleted!
                 } else {
-                    $this->EE->db->where($column_name_for_id, $entry_id)->delete('exp_lock_entry_entries');
+                    $this->EE->db->where($column_name_for_id, $entry_id)->delete('exp_lock_channel_entry_entries');
                 }
             } elseif (
                 !is_null($object_id)
             ) {
                 if ($object_id != $entry_id) {
-                    $this->EE->db->where($column_name_for_id, $entry_id)->delete('exp_lock_entry_entries');
+                    $this->EE->db->where($column_name_for_id, $entry_id)->delete('exp_lock_channel_entry_entries');
                 }
             } elseif (
                 !is_null($session_id)
             ) {
                 if ($entry['session_id'] != $session_id) {
-                    $this->EE->db->where($column_name_for_id, $entry_id)->delete('exp_lock_entry_entries');
+                    $this->EE->db->where($column_name_for_id, $entry_id)->delete('exp_lock_channel_entry_entries');
                 }
             } else {
-                $this->EE->db->where($column_name_for_id, $entry_id)->delete('exp_lock_entry_entries');
+                $this->EE->db->where($column_name_for_id, $entry_id)->delete('exp_lock_channel_entry_entries');
             }
         }
     }
 }
 
-/* End of file ext.lock_entry.php */
+/* End of file ext.lock_channel_entry.php */
