@@ -8,7 +8,7 @@
  * @copyright           Copyright (c) 2012 Denver Sessink
  */
 $lang = array(
-    'lock_entry_module_name' => 'Lock Entry',
+    'lock_entry_module_name' => 'Lock Channel Entry',
     'lock_entry_module_description' => 'Lock entry if the entry is currently being edited by another user.',
 
     'lock_entry_warning' => 'Warning!',

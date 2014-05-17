@@ -1,15 +1,20 @@
 <?php if (!defined("BASEPATH")) exit('No direct script access allowed.');
 
+namespace home\ahebrank\lock_channel_entry;
+
 require_once(dirname(__FILE__) . "/settings.php");
 
 /**
- * Module File for Lock Entry
+ * Module File for Lock Channel Entry
  *
- * This file must be in your /system/third_party/lock_entry directory of your ExpressionEngine installation
+ * This file must be in your /system/third_party/lock_channel_entry directory of your ExpressionEngine installation
  *
- * @package             Lock_entry
+ * @package             Lock_channel_entry
  * @author              Denver Sessink (dsessink@gmail.com)
  * @copyright           Copyright (c) 2012 Denver Sessink
+ *
+ * forked from Lock-Entry (https://github.com/denvers/Lock-Entry) by Andy Hebrank, May 2014
+ * 
  */
 class Lock_channel_entry
 {
@@ -70,25 +75,18 @@ class Lock_channel_entry
         }
 
         // accept entry or template mode
-        if ( !$this->EE->input->get('mode') == "entry" && !$this->EE->input->get('mode') == "template" ) {
+        if ( !$this->EE->input->get('mode') == "entry" ) {
             die('ERROR.30');
         }
 
         // - Ping (keep alive, activity update) (AJAX)
-        if ( $this->EE->input->get('mode') == 'template' )
-        {
-            $mode = "template";
-        }
-        else
-        {
-            $mode = "entry"; // which is default
-        }
+        $mode = "entry";
 
         $object_id = $this->EE->input->get('object_id');
         $session_id = $this->EE->input->get('session_id');
 
         // validate entry_id|template_id and member_id
-        if (lock_entry_settings::_generate_ping_hash($object_id, $session_id) != $this->EE->input->get('hash')) {
+        if (lock_channel_entry_settings::_generate_ping_hash($object_id, $session_id) != $this->EE->input->get('hash')) {
             die('ERROR.40');
         }
 
@@ -98,7 +96,7 @@ class Lock_channel_entry
             $data,
             sprintf(
                 "`%s` = %d AND `session_id` = %d",
-                ($mode == "template") ? "template_id" : "entry_id",
+                "entry_id",
                 $object_id,
                 $session_id
             )
