@@ -52,7 +52,7 @@ class Lock_channel_entry_ext
     function Lock_channel_entry_ext($settings = '')
     {
         $this->EE =& get_instance();
-        $this->EE->lang->loadfile("lock_entry");
+        $this->EE->lang->loadfile("lock_channel_entry");
         $this->active_site = $this->EE->config->item('site_id');
     }
 
