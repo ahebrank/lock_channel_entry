@@ -1,7 +1,4 @@
 <?php if (!defined("BASEPATH")) exit('No direct script access allowed.');
-
-namespace home\ahebrank\lock_channel_entry;
-
 require_once(dirname(__FILE__) . "/settings.php");
 
 /**
